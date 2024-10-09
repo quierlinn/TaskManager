@@ -14,6 +14,16 @@
             "related": ".xml"
           }
         }
+      },
+      "TaskManager.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/TaskManager.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TaskManager.Core.dll": {}
+        }
       }
     }
   },
@@ -47,11 +57,17 @@
         "newtonsoft.json.nuspec",
         "packageIcon.png"
       ]
+    },
+    "TaskManager.Core/1.0.0": {
+      "type": "project",
+      "path": "../TaskManager.Core/TaskManager.Core.csproj",
+      "msbuildProject": "../TaskManager.Core/TaskManager.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Newtonsoft.Json >= 13.0.3"
+      "Newtonsoft.Json >= 13.0.3",
+      "TaskManager.Core >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -60,11 +76,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj",
-      "projectName": "TaskManager",
-      "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj",
+      "projectUniqueName": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Services\\TaskManager.Services.csproj",
+      "projectName": "TaskManager.Services",
+      "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Services\\TaskManager.Services.csproj",
       "packagesPath": "C:\\Users\\quierlinn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\obj\\",
+      "outputPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Services\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\quierlinn\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -78,7 +94,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj": {
+              "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj": {}
+    "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj": {
+    "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj",
-        "projectName": "TaskManager",
-        "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\TaskManager.csproj",
+        "projectUniqueName": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj",
+        "projectName": "TaskManager.Core",
+        "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj",
         "packagesPath": "C:\\Users\\quierlinn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager\\obj\\",
+        "outputPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\quierlinn\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -42,12 +42,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "dependencies": {
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.3, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
