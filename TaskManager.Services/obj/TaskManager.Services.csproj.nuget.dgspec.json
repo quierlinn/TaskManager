@@ -42,6 +42,112 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\TaskManager.DataAccess.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\TaskManager.DataAccess.csproj",
+        "projectName": "TaskManager.DataAccess",
+        "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\TaskManager.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\quierlinn\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\quierlinn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj": {
+                "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Core": {
+              "target": "Package",
+              "version": "[1.6.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -86,6 +192,9 @@
             "projectReferences": {
               "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj": {
                 "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.Core\\TaskManager.Core.csproj"
+              },
+              "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\TaskManager.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\quierlinn\\RiderProjects\\TaskManager\\TaskManager.DataAccess\\TaskManager.DataAccess.csproj"
               }
             }
           }
@@ -105,9 +214,23 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Newtonsoft.Json": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[13.0.3, )"
+              "version": "[8.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.8, )"
             }
           },
           "imports": [
