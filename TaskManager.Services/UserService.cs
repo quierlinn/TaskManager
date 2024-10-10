@@ -1,77 +1,59 @@
 ﻿using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
+using TaskManager.DataAccess;
 
 namespace TaskManager.Services;
 
 public class UserService
 {
-    /*private const string UsersFileName = "users.json";
-    private List<User> Users { get; set; }
+    private readonly TaskManagerDbContext _dbContext;
 
-    public UserService()
+    public UserService(TaskManagerDbContext dbContext)
     {
-        if (File.Exists(UsersFileName))
-        {
-            var json = File.ReadAllText(UsersFileName);
-            Users = JsonConvert.DeserializeObject<List<User>>(json);
-        }
-        else
-        {
-            Users = new List<User>();
-            var admin = new User
-            {
-                Username = "admin",
-                Password = ComputeSha256Hash("admin"),
-                Role = "Admin"
-            };
-            Users.Add(admin);
-            SaveUsers();
-        }
+        _dbContext = dbContext;
     }
 
-    public bool Authenticate(string username, string password, out User user)
+    public ICollection<User> GetUsers()
     {
-        user = Users.SingleOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)
-                                          && u.Password == ComputeSha256Hash(password));
-        return user != null;
+        return _dbContext.Users.ToList();
+    }
+
+    public User GetUserById(int id)
+    {
+        return _dbContext.Users.FirstOrDefault(u => u.Id == id);
     }
 
     public void AddUser(string username, string password, string role)
     {
-        if (Users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
-        {
-            throw new Exception("User already exists");
-        }
-
-        var newUser = new User
+        var user = new User
         {
             Username = username,
-            Password = ComputeSha256Hash(password),
+            Password = BCrypt.Net.BCrypt.HashPassword(password),
             Role = role
         };
-        Users.Add(newUser);
-        SaveUsers();
+        _dbContext.Users.Add(user);
+        _dbContext.SaveChanges();
     }
 
-    public void SaveUsers()
+    public void UpdateUser(int id, string username, string role)
     {
-        var json = JsonConvert.SerializeObject(Users);
-        File.WriteAllText(UsersFileName, json);
-    }
-    private string ComputeSha256Hash(string rawData)
-    {
-        using (SHA256 sha256Hash = SHA256.Create())
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        if (user != null)
         {
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-
-            // Преобразуем в строку
-            StringBuilder builder = new StringBuilder();
-            foreach (var b in bytes)
-            {
-                builder.Append(b.ToString("x2"));
-            }
-            return builder.ToString();
+            user.Username = username;
+            user.Role = role;
+            _dbContext.SaveChanges();
         }
-    }*/
+    }
+
+    public void DeleteUser(int id)
+    {
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        if (user != null)
+        {
+            _dbContext.Users.Remove(user);
+            _dbContext.SaveChanges();
+        }
+    }
 }
