@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskManager.ConsoleApplication")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aefe5a487a862531d7f7ca75c399750bbdc161ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2a675cf9dddc1a43f5d2d46f4f44c277355d6a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskManager.ConsoleApplication")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskManager.ConsoleApplication")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
