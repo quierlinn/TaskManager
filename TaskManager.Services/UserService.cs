@@ -1,27 +1,24 @@
-﻿using System.Net.Http.Json;
-using System.Security.Cryptography;
-using System.Text;
+﻿using TaskManager;
+using TaskManager.Core.Abstractions;
 using TaskManager.DataAccess;
 
-namespace TaskManager.Services;
-
-public class UserService
+public class UserService : IUserService
 {
-    private readonly TaskManagerDbContext _dbContext;
+    private readonly TaskManagerDbContext _context;
 
-    public UserService(TaskManagerDbContext dbContext)
+    public UserService(TaskManagerDbContext context)
     {
-        _dbContext = dbContext;
+        _context = context;
     }
 
-    public ICollection<User> GetUsers()
+    public IEnumerable<User> GetAllUsers()
     {
-        return _dbContext.Users.ToList();
+        return _context.Users.ToList();
     }
 
     public User GetUserById(int id)
     {
-        return _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        return _context.Users.Find(id);
     }
 
     public void AddUser(string username, string password, string role)
@@ -32,28 +29,45 @@ public class UserService
             Password = BCrypt.Net.BCrypt.HashPassword(password),
             Role = role
         };
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();
+
+        _context.Users.Add(user);
+        _context.SaveChanges();
+        Console.WriteLine("Пользователь добавлен.");
     }
 
     public void UpdateUser(int id, string username, string role)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        var user = _context.Users.Find(id);
         if (user != null)
         {
             user.Username = username;
             user.Role = role;
-            _dbContext.SaveChanges();
+            _context.SaveChanges();
+            Console.WriteLine("Пользователь обновлен.");
+        }
+        else
+        {
+            Console.WriteLine("Пользователь не найден.");
         }
     }
 
     public void DeleteUser(int id)
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
+        var user = _context.Users.Find(id);
         if (user != null)
         {
-            _dbContext.Users.Remove(user);
-            _dbContext.SaveChanges();
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            Console.WriteLine("Пользователь удален.");
         }
+        else
+        {
+            Console.WriteLine("Пользователь не найден.");
+        }
+    }
+
+    public bool UserExists(string username)
+    {
+        return _context.Users.Any(u => u.Username == username);
     }
 }
