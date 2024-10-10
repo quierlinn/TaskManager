@@ -8,8 +8,19 @@ public class TaskManagerDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
 
+    public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
+    {
+        
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5438;Database=TaskManager;Username=postgres;Password=12345");
+        optionsBuilder.UseSqlite("Data Source=TaskManager.db");
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username);
     }
 }

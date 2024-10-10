@@ -1,24 +1,25 @@
-﻿using TaskManager.DataAccess;
+﻿using TaskManager.Core.Abstractions;
+using TaskManager.DataAccess;
 
 namespace TaskManager.Services;
 
-public class ProjectService
+public class ProjectService : IProjectService
 {
-    private readonly TaskManagerDbContext _dbContext;
+    private readonly TaskManagerDbContext _context;
 
-    public ProjectService(TaskManagerDbContext dbContext)
+    public ProjectService(TaskManagerDbContext context)
     {
-        _dbContext = dbContext;
+        _context = context;
     }
 
-    public List<Project> GetProjects()
+    public IEnumerable<Project> GetAllProjects()
     {
-        return _dbContext.Projects.ToList();
+        return _context.Projects.ToList();
     }
 
     public Project GetProjectById(int id)
     {
-        return _dbContext.Projects.FirstOrDefault(p => p.Id == id);
+        return _context.Projects.Find(id);
     }
 
     public void AddProject(string name, string description)
@@ -28,28 +29,40 @@ public class ProjectService
             Name = name,
             Description = description
         };
-        _dbContext.Projects.Add(project);
-        _dbContext.SaveChanges();
+
+        _context.Projects.Add(project);
+        _context.SaveChanges();
+        Console.WriteLine("Проект добавлен.");
     }
 
     public void UpdateProject(int id, string name, string description)
     {
-        var project = _dbContext.Projects.FirstOrDefault(p => p.Id == id);
+        var project = _context.Projects.Find(id);
         if (project != null)
         {
             project.Name = name;
             project.Description = description;
-            _dbContext.SaveChanges();
+            _context.SaveChanges();
+            Console.WriteLine("Проект обновлен.");
+        }
+        else
+        {
+            Console.WriteLine("Проект не найден.");
         }
     }
 
     public void DeleteProject(int id)
     {
-        var project = _dbContext.Projects.FirstOrDefault(p => p.Id == id);
+        var project = _context.Projects.Find(id);
         if (project != null)
         {
-            _dbContext.Projects.Remove(project);
-            _dbContext.SaveChanges();
+            _context.Projects.Remove(project);
+            _context.SaveChanges();
+            Console.WriteLine("Проект удален.");
+        }
+        else
+        {
+            Console.WriteLine("Проект не найден.");
         }
     }
 }

@@ -1,57 +1,68 @@
-﻿using TaskManager.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TaskManager.DataAccess;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Design;
+using TaskManager.Core.Abstractions;
 using TaskManager.Services;
 
-namespace TaskManager.ConsoleApplication;
 
-static class Program
+var services = new ServiceCollection();
+ConfigureServices(services);
+var serviceProvider = services.BuildServiceProvider();
+
+RunApp(serviceProvider);
+
+static void ConfigureServices(IServiceCollection services)
 {
-    static void Main(string[] args)
+    services.AddDbContext<TaskManagerDbContext>();
+    services.AddScoped<IAuthenticationService, AuthenticationService>();
+    services.AddScoped<IUserService, UserService>();
+    services.AddScoped<IProjectService, ProjectService>();
+}
+
+static void RunApp(IServiceProvider services)
+{
+    using var scope = services.CreateScope();
+    var authService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+    var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
+
+    Console.WriteLine("=== Система Управления Проектами ===");
+    Console.WriteLine("1. Войти");
+    Console.WriteLine("2. Выйти");
+    Console.Write("Выберите опцию: ");
+    var option = Console.ReadLine();
+    if (option == "1")
     {
-        var context = new TaskManagerDbContext();
-        var authService = new AuthenticationService(context);
-        var userService = new UserService(context);
-        var projectService = new ProjectService(context);
-        if (!context.Users.Any())
+        Console.Write("Имя пользователя: ");
+        var username = Console.ReadLine();
+        Console.Write("Пароль: ");
+        var password = ReadPassword();
+        var user = authService.Login(username, password);
+        if (user != null)
         {
-            authService.Register("admin", "password", "Admin");
-            authService.Register("user", "password", "User");
-            Console.WriteLine("Созданы начальные пользователи: admin и user.");
-        }
-        Console.WriteLine("=== Система Управления Проектами ===");
-        Console.WriteLine("1. Войти");
-        Console.WriteLine("2. Выйти");
-        Console.Write("Выберите опцию: ");
-        var option = Console.ReadLine();
-        if (option == "1")
-        {
-            Console.Write("Имя пользователя: ");
-            var username = Console.ReadLine();
-            Console.Write("Пароль: ");
-            var password = ReadPassword();
-            var user = authService.Login(username, password);
-            if (user != null)
+            Console.WriteLine($"\nДобро пожаловать, {user.Username}!");
+            if (user.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine($"\nДобро пожаловать, {user.Username}!");
-                if (user.Role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
-                {
-                    AdminMenu(userService, projectService);
-                }
-                else
-                {
-                    UserMenu(projectService);
-                }
+                AdminMenu(userService, projectService);
             }
             else
             {
-                Console.WriteLine("Неверное имя пользователя или пароль.");
+                UserMenu(projectService);
             }
         }
         else
         {
-            Console.WriteLine("Выход из приложения.");
+            Console.WriteLine("Неверное имя пользователя или пароль.");
         }
     }
-    static void AdminMenu(UserService userService, ProjectService projectSservice)
+    else
+    {
+        Console.WriteLine("Выход из приложения.");
+    }
+
+    static void AdminMenu(IUserService userService, IProjectService projectSservice)
     {
         while (true)
         {
@@ -78,7 +89,8 @@ static class Program
             }
         }
     }
-    static void UserMenu(ProjectService projectService)
+
+    static void UserMenu(IProjectService projectService)
     {
         while (true)
         {
@@ -101,7 +113,8 @@ static class Program
             }
         }
     }
-    static void ManageProjects(ProjectService projectService)
+
+    static void ManageProjects(IProjectService projectService)
     {
         Console.WriteLine("\n=== Управление Проектами ===");
         Console.WriteLine("1. Просмотреть все проекты");
@@ -114,13 +127,14 @@ static class Program
         switch (option)
         {
             case "1":
-                var projects = projectService.GetProjects();
+                var projects = projectService.GetAllProjects();
                 Console.WriteLine("\nПроекты:");
                 foreach (var project in projects)
                 {
                     Console.WriteLine(
                         $"ID: {project.Id}, Название: {project.Name}, Описание: {project.Description}");
                 }
+
                 break;
             case "2":
                 Console.Write("Введите название проекта: ");
@@ -150,7 +164,8 @@ static class Program
                 break;
         }
     }
-    static void ManageUsers(UserService userService)
+
+    static void ManageUsers(IUserService userService)
     {
         while (true)
         {
@@ -165,12 +180,13 @@ static class Program
             switch (option)
             {
                 case "1":
-                    var users = userService.GetUsers();
+                    var users = userService.GetAllUsers();
                     Console.WriteLine("\nСписок пользователей:");
                     foreach (var user in users)
                     {
                         Console.WriteLine($"ID: {user.Id}, Имя: {user.Username}, Роль: {user.Role}");
                     }
+
                     break;
                 case "2":
                     Console.Write("Имя пользователя: ");
@@ -197,6 +213,7 @@ static class Program
                     {
                         Console.WriteLine("Неверный ID.");
                     }
+
                     break;
                 case "4":
                     Console.Write("ID пользователя для удаления: ");
@@ -209,6 +226,7 @@ static class Program
                     {
                         Console.WriteLine("Неверный ID.");
                     }
+
                     break;
                 case "5":
                     return;
@@ -218,15 +236,17 @@ static class Program
             }
         }
     }
-    static void ViewProjects(ProjectService projectService)
+
+    static void ViewProjects(IProjectService projectService)
     {
-        var projects = projectService.GetProjects();
+        var projects = projectService.GetAllProjects();
         Console.WriteLine("\nДоступные проекты:");
         foreach (var project in projects)
         {
             Console.WriteLine($"ID: {project.Id}, Название: {project.Name}, Описание: {project.Description}");
         }
     }
+
     static string ReadPassword()
     {
         string password = "";
@@ -245,7 +265,19 @@ static class Program
                 Console.Write("\b \b");
             }
         } while (key.Key != ConsoleKey.Enter);
+
         Console.WriteLine();
         return password;
+    }
+}
+
+public class BloggingContextFactory : IDesignTimeDbContextFactory<TaskManagerDbContext>
+{
+    public TaskManagerDbContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<TaskManagerDbContext>();
+        optionsBuilder.UseSqlite("Data Source=TaskManagerDb.db");
+
+        return new TaskManagerDbContext(optionsBuilder.Options);
     }
 }
