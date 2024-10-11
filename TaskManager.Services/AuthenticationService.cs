@@ -35,7 +35,7 @@ public class AuthenticationService : IAuthenticationService
     public User Login(string username, string password)
     {
         var user = _context.Users.SingleOrDefault(u => u.Username == username);
-        if (user != null && password == user.Password)
+        if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
             return user;
         }
