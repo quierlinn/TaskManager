@@ -2,8 +2,10 @@
 
 public interface ITaskService
 {
-    void AddTask(string title, string description, int projectId);
+    void CreateTask(string title, string description, int projectId);
+    Task GetTaskById(int id);
+    IEnumerable<Task> GetAllTasks();
     IEnumerable<Task> GetTasksByProject(int projectId);
-    void UpdateTask(int taskId, string title, string description);
-    void DeleteTask(int taskId);
+    void UpdateTask(int id, string title, string description);
+    void DeleteTask(int id);
 }

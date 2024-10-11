@@ -2,10 +2,10 @@
 
 public interface IUserService
 {
-    IEnumerable<User> GetAllUsers();
+    void CreateUser(string username, string password, string role);
     User GetUserById(int id);
-    void AddUser(string username, string password, string role);
+    User GetUserByUsername(string username);
+    IEnumerable<User> GetAllUsers();
     void UpdateUser(int id, string username, string role);
     void DeleteUser(int id);
-    bool UserExists(string username);
 }
