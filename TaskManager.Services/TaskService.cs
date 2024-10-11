@@ -5,60 +5,68 @@ using TaskManager.Core.Abstractions;
 using TaskManager.DataAccess;
 
 namespace TaskManager.Services;
+    public class TaskService : ITaskService
+    {
+        private readonly ITaskRepository _taskRepository;
 
-public class TaskService : ITaskService
-{
-    private readonly TaskManagerDbContext _context;
-
-        public TaskService(TaskManagerDbContext context)
+        public TaskService(ITaskRepository taskRepository)
         {
-            _context = context;
+            _taskRepository = taskRepository;
         }
 
-        public void AddTask(string title, string description, int projectId)
+        public void CreateTask(string title, string description, int projectId)
         {
             var task = new Task
             {
                 Title = title,
                 Description = description,
+                ProjectId = projectId,
                 IsCompleted = false,
-                ProjectId = projectId
             };
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
+
+            _taskRepository.Add(task);
+            Console.WriteLine("Задача успешно создана.");
+        }
+
+        public Task GetTaskById(int id)
+        {
+            return _taskRepository.GetById(id);
+        }
+
+        public IEnumerable<Task> GetAllTasks()
+        {
+            return _taskRepository.GetAll();
         }
 
         public IEnumerable<Task> GetTasksByProject(int projectId)
         {
-            return _context.Tasks.Where(t => t.ProjectId == projectId).ToList();
+            return _taskRepository.GetByProject(projectId);
         }
 
-        public void UpdateTask(int taskId, string title, string description)
+        public void UpdateTask(int id, string title, string description)
         {
-            var task = _context.Tasks.Find(taskId);
-            if (task != null)
+            var task = _taskRepository.GetById(id);
+            if (task == null)
             {
-                task.Title = title;
-                task.Description = description;
-                _context.SaveChanges();
+                throw new ArgumentException("Задача не найдена.");
             }
-            else
-            {
-                Console.WriteLine("Задача не найдена.");
-            }
+
+            task.Title = title;
+            task.Description = description;
+
+            _taskRepository.Update(task);
+            Console.WriteLine("Задача успешно обновлена.");
         }
 
-        public void DeleteTask(int taskId)
+        public void DeleteTask(int id)
         {
-            var task = _context.Tasks.Find(taskId);
-            if (task != null)
+            var task = _taskRepository.GetById(id);
+            if (task == null)
             {
-                _context.Tasks.Remove(task);
-                _context.SaveChanges();
+                throw new ArgumentException("Задача не найдена.");
             }
-            else
-            {
-                Console.WriteLine("Задача не найдена.");
-            }
+
+            _taskRepository.Delete(task);
+            Console.WriteLine("Задача успешно удалена.");
         }
-}
+    }

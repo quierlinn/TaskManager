@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Core.Abstractions;
+
 namespace TaskManager.DataAccess;
 
 public class TaskManagerDbContext : DbContext

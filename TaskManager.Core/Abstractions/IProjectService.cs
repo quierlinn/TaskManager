@@ -1,14 +1,10 @@
 ﻿namespace TaskManager.Core.Abstractions;
 
 public interface IProjectService
-{ 
-    IEnumerable<Project> GetAllProjects();
-
+{
+    void CreateProject(string name, string description);
     Project GetProjectById(int id);
-
-    void AddProject(string name, string description);
-
+    IEnumerable<Project> GetAllProjects();
     void UpdateProject(int id, string name, string description);
-
     void DeleteProject(int id);
 }

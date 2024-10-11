@@ -3,71 +3,72 @@ using TaskManager.Core.Abstractions;
 using TaskManager.DataAccess;
 
 public class UserService : IUserService
-{
-    private readonly TaskManagerDbContext _context;
-
-    public UserService(TaskManagerDbContext context)
     {
-        _context = context;
-    }
+        private readonly IUserRepository _userRepository;
 
-    public IEnumerable<User> GetAllUsers()
-    {
-        return _context.Users.ToList();
-    }
-
-    public User GetUserById(int id)
-    {
-        return _context.Users.Find(id);
-    }
-
-    public void AddUser(string username, string password, string role)
-    {
-        var user = new User
+        public UserService(IUserRepository userRepository)
         {
-            Username = username,
-            Password = BCrypt.Net.BCrypt.HashPassword(password),
-            Role = role
-        };
+            _userRepository = userRepository;
+        }
 
-        _context.Users.Add(user);
-        _context.SaveChanges();
-        Console.WriteLine("Пользователь добавлен.");
-    }
-
-    public void UpdateUser(int id, string username, string role)
-    {
-        var user = _context.Users.Find(id);
-        if (user != null)
+        public void CreateUser(string username, string password, string role)
         {
+            var existingUser = _userRepository.GetByUsername(username);
+            if (existingUser != null)
+            {
+                throw new ArgumentException("Пользователь с таким именем уже существует.");
+            }
+
+            var user = new User
+            {
+                Username = username,
+                Password = BCrypt.Net.BCrypt.HashPassword(password),
+                Role = role
+            };
+
+            _userRepository.Add(user);
+            Console.WriteLine("Пользователь успешно создан.");
+        }
+
+        public User GetUserById(int id)
+        {
+            return _userRepository.GetById(id);
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            return _userRepository.GetByUsername(username);
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _userRepository.GetAll();
+        }
+
+        public void UpdateUser(int id, string username, string role)
+        {
+            var user = _userRepository.GetById(id);
+            if (user == null)
+            {
+                throw new ArgumentException("Пользователь не найден.");
+            }
+
             user.Username = username;
             user.Role = role;
-            _context.SaveChanges();
-            Console.WriteLine("Пользователь обновлен.");
-        }
-        else
-        {
-            Console.WriteLine("Пользователь не найден.");
-        }
-    }
 
-    public void DeleteUser(int id)
-    {
-        var user = _context.Users.Find(id);
-        if (user != null)
-        {
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-            Console.WriteLine("Пользователь удален.");
+            _userRepository.Update(user);
+            Console.WriteLine("Пользователь успешно обновлен.");
         }
-        else
-        {
-            Console.WriteLine("Пользователь не найден.");
-        }
-    }
 
-    public bool UserExists(string username)
-    {
-        return _context.Users.Any(u => u.Username == username);
+        public void DeleteUser(int id)
+        {
+            var user = _userRepository.GetById(id);
+            if (user == null)
+            {
+                throw new ArgumentException("Пользователь не найден.");
+            }
+
+            _userRepository.Delete(user);
+            Console.WriteLine("Пользователь успешно удален.");
+        }
     }
-}

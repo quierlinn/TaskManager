@@ -5,19 +5,19 @@ namespace TaskManager.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly TaskManagerDbContext _context;
+    private readonly IUserRepository _userRepository;
 
-    public AuthenticationService(TaskManagerDbContext context)
+    public AuthenticationService(IUserRepository userRepository)
     {
-        _context = context;
+        _userRepository = userRepository;
     }
 
     public void Register(string username, string password, string role)
     {
-        if (_context.Users.Any(u => u.Username == username))
+        var existingUser = _userRepository.GetByUsername(username);
+        if (existingUser != null)
         {
-            Console.WriteLine("Пользователь с таким именем уже существует.");
-            return;
+            throw new ArgumentException("Пользователь с таким именем уже существует.");
         }
 
         var user = new User
@@ -27,14 +27,13 @@ public class AuthenticationService : IAuthenticationService
             Role = role
         };
 
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        _userRepository.Add(user);
         Console.WriteLine("Пользователь успешно зарегистрирован.");
     }
 
     public User Login(string username, string password)
     {
-        var user = _context.Users.SingleOrDefault(u => u.Username == username);
+        var user = _userRepository.GetByUsername(username);
         if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
             return user;

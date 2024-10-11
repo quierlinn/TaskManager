@@ -5,64 +5,54 @@ namespace TaskManager.Services;
 
 public class ProjectService : IProjectService
 {
-    private readonly TaskManagerDbContext _context;
+    private readonly IProjectRepository _projectRepository;
 
-    public ProjectService(TaskManagerDbContext context)
+    public ProjectService(IProjectRepository projectRepository)
     {
-        _context = context;
+        _projectRepository = projectRepository;
     }
 
-    public IEnumerable<Project> GetAllProjects()
-    {
-        return _context.Projects.ToList();
-    }
-
-    public Project GetProjectById(int id)
-    {
-        return _context.Projects.Find(id);
-    }
-
-    public void AddProject(string name, string description)
+    public void CreateProject(string name, string description)
     {
         var project = new Project
         {
             Name = name,
             Description = description
         };
+        _projectRepository.Add(project);
+    }
 
-        _context.Projects.Add(project);
-        _context.SaveChanges();
-        Console.WriteLine("Проект добавлен.");
+    public Project GetProjectById(int id)
+    {
+        return _projectRepository.GetById(id);
+    }
+
+    public IEnumerable<Project> GetAllProjects()
+    {
+        return _projectRepository.GetAll();
     }
 
     public void UpdateProject(int id, string name, string description)
     {
-        var project = _context.Projects.Find(id);
-        if (project != null)
+        var project = _projectRepository.GetById(id);
+        if (project == null)
         {
-            project.Name = name;
-            project.Description = description;
-            _context.SaveChanges();
-            Console.WriteLine("Проект обновлен.");
+            throw new ArgumentException("Проект не найден.");
         }
-        else
-        {
-            Console.WriteLine("Проект не найден.");
-        }
+
+        project.Name = name;
+        project.Description = description;
+        _projectRepository.Update(project);
     }
 
     public void DeleteProject(int id)
     {
-        var project = _context.Projects.Find(id);
-        if (project != null)
+        var project = _projectRepository.GetById(id);
+        if (project == null)
         {
-            _context.Projects.Remove(project);
-            _context.SaveChanges();
-            Console.WriteLine("Проект удален.");
+            throw new ArgumentException("Проект не найден.");
         }
-        else
-        {
-            Console.WriteLine("Проект не найден.");
-        }
+
+        _projectRepository.Delete(project);
     }
 }
